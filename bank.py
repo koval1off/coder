@@ -3,6 +3,7 @@ from datetime import datetime
 time = datetime.now().strftime('%H:%M')
 print(time)
 
+
 title = "ATM"
 print(title.center(9,'*'))      # making title
 
