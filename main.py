@@ -15,6 +15,16 @@ def get_number_from_input(text):
     return int(num)
 
 
+count = 1
+def count_attemps():
+    global count
+    if count < 3:
+        count += 1
+    else:
+        quit()
+    return
+
+
 def menu():
     privat_bank_atm = ATM()
 
@@ -48,15 +58,21 @@ def menu():
 
 
 def main():
-    user_id = get_number_from_input("Enter your ID: ")
-    user_pass = get_number_from_input("Enter you password: ")
-
-    if not check_id_and_pin(user_id, user_pass):
-        print("Something wrong with your ID or PASS. Try again")
-        return
-
-    print('Welcome to our Bank!')
-    menu()
+    while True:
+        user_id = get_number_from_input("Enter your ID: ")
+        user_pass = get_number_from_input("Enter you password: ")
+        try:
+            if not check_id_and_pin(user_id, user_pass):
+                print(f"Something wrong with your ID or PASS. {count}/3. Try again")  # need not to TRY AGAIN at the last time
+                count_attemps()
+                continue
+            else:
+                print('Welcome to our Bank!')
+                menu()
+                break
+        except:
+            print("Try next day!")
+            break
 
 
 main()
