@@ -48,15 +48,22 @@ def menu():
 
 
 def main():
-    user_id = get_number_from_input("Enter your ID: ")
-    user_pass = get_number_from_input("Enter you password: ")
-
-    if not check_id_and_pin(user_id, user_pass):
-        print("Something wrong with your ID or PASS. Try again")
-        return
-
-    print('Welcome to our Bank!')
-    menu()
+    count_attemps = 1
+    login_success = False
+    while count_attemps <= 3:
+        user_id = get_number_from_input("Enter your ID: ")
+        user_pass = get_number_from_input("Enter you password: ")
+        login_success = check_id_and_pin(user_id, user_pass)
+        if not login_success:
+            print(f"Something wrong with your ID or PASS. {count_attemps}/3. Try again")  # need not to TRY AGAIN at the last time
+            count_attemps += 1
+        else:
+            break
+    
+    if login_success:
+        menu()
+    else:
+        print("Try next time. Too much fails")
 
 
 main()
