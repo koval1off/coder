@@ -10,9 +10,22 @@ def check_id_and_pin(user_id, user_pin):
 
 
 def get_number_from_input(text):
-    num = input(text)
+    num = int(text)
 
-    return int(num)
+    return num
+
+
+def check_format_input(user_id, user_pin):
+    import string
+    if len(user_id) == 4 and len(user_pin) == 4:
+        for i in user_id and user_pin:
+            if i in string.ascii_letters:
+                return False
+    else:
+        print("Too long or too short!")
+        return False
+
+    return True
 
 
 def menu():
@@ -50,15 +63,23 @@ def menu():
 def main():
     count_attemps = 1
     login_success = False
+    correct_format = False
     while count_attemps <= 3:
-        user_id = get_number_from_input("Enter your ID: ")
-        user_pass = get_number_from_input("Enter you password: ")
-        login_success = check_id_and_pin(user_id, user_pass)
-        if not login_success:
-            print(f"Something wrong with your ID or PASS. {count_attemps}/3. Try again")  # need not to TRY AGAIN at the last time
-            count_attemps += 1
+        user_id = input("Enter your ID: ")
+        user_pass = input("Enter you password: ")
+        correct_format = check_format_input(user_id, user_pass)
+        if not correct_format:
+            print("Please use 4 digits!")
+            continue
         else:
-            break
+            user_id = get_number_from_input(user_id)
+            user_pass = get_number_from_input(user_pass)
+            login_success = check_id_and_pin(user_id, user_pass)
+            if not login_success:
+                print(f"Something wrong with your ID or PASS. {count_attemps}/3. Try again")  # need not to TRY AGAIN at the last time
+                count_attemps += 1
+            else:
+                break
     
     if login_success:
         menu()
