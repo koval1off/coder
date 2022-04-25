@@ -18,16 +18,11 @@ def get_number_from_input(text):
 
 
 def validation_credential(user_id, user_pin):
-    if len(str(user_id)) and len(str(user_pin)) == 4:
-        for i in str(user_id) and str(user_pin):
-            if not i.isdigit():
-                
-                return False
+    if len(str(user_id)) == 4 and len(str(user_pin)) == 4:
+        return True
     else:
         print("Too long or too short!")
         return False
-
-    return True
 
 
 def menu():
