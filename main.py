@@ -2,12 +2,21 @@ from bank import ATM
 from datetime import datetime
 
 
+with open("darabase.txt", "w") as f:    # just to create the file automatically 
+    f.write("2222:3333")
+
+
 def check_id_and_pin(user_id, user_pin):
-    if user_id == 2222 and user_pin == 3333:
-        return True
+    with open("database.txt", "r") as base:
+        if base.readline(4) == str(user_id):
+            return True
+
+        base.seek(0)
+
+        if base.readline()[4:9] == str(user_pin):
+            return True
 
     return False
-
 
 def get_number_from_input(text):
     try:
