@@ -8,12 +8,8 @@ with open("darabase.txt", "w") as f:    # just to create the file automatically
 
 def check_id_and_pin(user_id, user_pin):
     with open("database.txt", "r") as base:
-        if base.readline(4) == str(user_id):
-            return True
-
-        base.seek(0)
-
-        if base.readline()[4:9] == str(user_pin):
+        base = base.readline().split(":")
+        if base[0] == str(user_id) and base[1] == str(user_pin):
             return True
 
     return False
