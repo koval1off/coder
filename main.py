@@ -2,11 +2,18 @@ from bank import ATM
 from datetime import datetime
 
 
-def check_id_and_pin(user_id, user_pin):
-    if user_id == 2222 and user_pin == 3333:
-        return True
+with open("database.txt", "w") as f:    # just to create the file automatically 
+    f.write("2222:3333\n")
+    f.write("5555:6666\n")
 
-    return False
+
+def check_id_and_pin(user_id, user_pin):
+    with open("database.txt", "r") as base:
+        for line in base.readlines():
+            line = line.split(":")
+            if str(user_id) in line[0]:
+                if str(user_pin) in line[1]:
+                    return True
 
 
 def get_number_from_input(text):
