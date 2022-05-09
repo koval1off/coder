@@ -36,7 +36,8 @@ def menu(user: User, atm: ATM):
               "1) Upload money\n\t"
               "2) Withdrawal money\n\t"
               "3) Show balance\n\t"
-              "4) Exit\n\t")   # show the menu operations
+              "4) Change PASS\n\t"
+              "5) Exit\n\t")   # show the menu operations
 
         menu_choise = input("Enter the number of operation: ")
         if int(menu_choise) == 1:
@@ -50,6 +51,8 @@ def menu(user: User, atm: ATM):
         elif int(menu_choise) == 3:
             atm.show_balance(user)
         elif int(menu_choise) == 4:
+            atm.change_user_pin(user)
+        elif int(menu_choise) == 5:
             return
         else:
             print('Wrong command, try again')

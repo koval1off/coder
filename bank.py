@@ -76,3 +76,23 @@ class ATM:
             for user in self.users:
                 f.write(f"{user.user_id}:{user.pin}:{user.balance}\n")
 
+    def change_user_pin(self, user: User):
+        """changes the user's pin"""
+        count_attempts_pin = 1
+        while count_attempts_pin <= 3:
+            user_pin = input("Enter your PASS: ")
+            access = user.check_pin(user_pin)
+            if not access:
+                print(f"Wrong PASS. {count_attempts_pin}/3. Try again")
+                count_attempts_pin += 1
+                continue
+            else:
+                new_pin = input("Enter NEW PASS: ")
+                break
+
+        if access:
+            user.pin = new_pin
+            self.save_users()
+        else:
+            print("Try next time. Too much fails")
+
