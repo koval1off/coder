@@ -19,6 +19,24 @@ def validation_credential(user_id: str, user_pin: str) -> bool:
         return False
 
 
+def checking_new_pin(user: User) -> str:
+    count_attempts = 1
+    while count_attempts <= 3:
+        user_pin = input("Enter you PASS: ")
+        access = user.check_pin(user_pin)
+        if not access:
+            print(f"Wrong PASS. {count_attempts}/3")
+            count_attempts += 1
+            continue
+        else:
+            new_pin = input("Correct\nEnter NEW PASS: ")
+            break
+    if access:
+        return new_pin
+    else:
+        print("Try next time. Too much fails")
+
+
 def menu(user: User, atm: ATM):
     if user is None:
         return
@@ -51,7 +69,8 @@ def menu(user: User, atm: ATM):
         elif int(menu_choise) == 3:
             atm.show_balance(user)
         elif int(menu_choise) == 4:
-            atm.change_user_pin(user)
+            new_pin = checking_new_pin(user)
+            atm.change_user_pin(user, new_pin)
         elif int(menu_choise) == 5:
             return
         else:

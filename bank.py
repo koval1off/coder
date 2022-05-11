@@ -1,4 +1,6 @@
+import user
 from user import User
+from typing import Optional
 
 
 class ATM:
@@ -15,12 +17,12 @@ class ATM:
                 user = User(info[0], info[1], int(info[2]))
                 self.users.append(user)
 
-    def print_users(self):
+    def print_users(self) -> None:
         """prints users' info"""
         for user in self.users:
             print(f"User_ID: {user.user_id}; User_PIN: {user.pin}; User_BALANCE: {user.balance}")
 
-    def get_user(self, user_id: str):
+    def get_user(self, user_id: str) -> Optional[user.User]:
         """checks if the users exists"""
         for user in self.users:
             if user.user_id == user_id:
@@ -35,7 +37,7 @@ class ATM:
         """give the balance of the current user"""
         return user.balance
 
-    def change_balance(self, user: User, new_balance):
+    def change_balance(self, user: User, new_balance: int) -> None:
         """changes the balance of the current user"""
         if new_balance < 0:
             print('Cannot update balance. Reason: New balance is negative')
@@ -44,7 +46,7 @@ class ATM:
         user.balance = new_balance
         self.save_users()
 
-    def upload_money(self, user: User, amount: int):
+    def upload_money(self, user: User, amount: int) -> None:
         """adds the amount to the balance of current user"""
         if amount <= 0:
             print('You must upload more than 0')
@@ -53,7 +55,7 @@ class ATM:
         new_balance = user.balance + amount
         self.change_balance(user, new_balance)
 
-    def withdrawal_money(self, user: User, amount: int):
+    def withdrawal_money(self, user: User, amount: int) -> None:
         """takes the amount from the balance of current user"""
         if amount <= 0:
             print('You must withdrawal more than 0')
@@ -65,7 +67,7 @@ class ATM:
         new_balance = user.balance - amount
         self.change_balance(user, new_balance)
 
-    def show_balance(self, user: User):
+    def show_balance(self, user: User) -> None:
         """shows the user's current balance"""
         print(f"You choosed the Show balance operation!\n"
               f"Your current balance is {user.balance}")
@@ -76,23 +78,7 @@ class ATM:
             for user in self.users:
                 f.write(f"{user.user_id}:{user.pin}:{user.balance}\n")
 
-    def change_user_pin(self, user: User):
+    def change_user_pin(self, user: User, new_pin: str) -> None:
         """changes the user's pin"""
-        count_attempts_pin = 1
-        while count_attempts_pin <= 3:
-            user_pin = input("Enter your PASS: ")
-            access = user.check_pin(user_pin)
-            if not access:
-                print(f"Wrong PASS. {count_attempts_pin}/3. Try again")
-                count_attempts_pin += 1
-                continue
-            else:
-                new_pin = input("Enter NEW PASS: ")
-                break
-
-        if access:
-            user.pin = new_pin
-            self.save_users()
-        else:
-            print("Try next time. Too much fails")
-
+        user.pin = new_pin
+        self.save_users()
