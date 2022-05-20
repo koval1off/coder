@@ -1,4 +1,3 @@
-import user
 from user import User
 from typing import Optional
 
@@ -22,8 +21,14 @@ class ATM:
         for user in self.users:
             print(f"User_ID: {user.user_id}; User_PIN: {user.pin}; User_BALANCE: {user.balance}")
 
-    def get_user(self, user_id: str) -> Optional[user.User]:
-        """checks if the users exists"""
+    def get_user(self, user_id: str) -> Optional[User]:
+        """
+        checks if the users exists
+
+        :param user_id: The id of user
+        :return: user if exists or None
+        """
+
         for user in self.users:
             if user.user_id == user_id:
                 return user
@@ -80,5 +85,8 @@ class ATM:
 
     def change_user_pin(self, user: User, new_pin: str) -> None:
         """changes the user's pin"""
+        if not new_pin:
+            return
+
         user.pin = new_pin
         self.save_users()

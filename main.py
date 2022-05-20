@@ -1,6 +1,7 @@
 from bank import ATM
 from datetime import datetime
 from user import User
+from typing import Optional
 
 
 def get_number_from_input(text: str) -> int:
@@ -15,26 +16,27 @@ def validation_credential(user_id: str, user_pin: str) -> bool:
     if len(str(user_id)) == 4 and len(str(user_pin)) == 4:
         return True
     else:
-        print("Too long or too short!")
         return False
 
 
-def checking_new_pin(user: User) -> str:
+def checking_new_pin(user: User) -> Optional[str]:  # here must be change pin
     count_attempts = 1
     while count_attempts <= 3:
         user_pin = input("Enter you PASS: ")
-        access = user.check_pin(user_pin)
-        if not access:
+        if user.check_pin(user_pin):    # move to another method
+            count_attempts = 1
+            while count_attempts <= 3:
+                new_pin = input("Correct\nEnter NEW PASS: ")
+                if validation_credential(user.user_id, new_pin):
+                    return new_pin
+                else:
+                    count_attempts += 1
+                    print("New pin Must be the number with 4 digits")
+        else:
             print(f"Wrong PASS. {count_attempts}/3")
             count_attempts += 1
-            continue
-        else:
-            new_pin = input("Correct\nEnter NEW PASS: ")
-            break
-    if access:
-        return new_pin
-    else:
-        print("Try next time. Too much fails")
+
+    return None
 
 
 def menu(user: User, atm: ATM):
@@ -70,7 +72,10 @@ def menu(user: User, atm: ATM):
             atm.show_balance(user)
         elif int(menu_choise) == 4:
             new_pin = checking_new_pin(user)
-            atm.change_user_pin(user, new_pin)
+            if new_pin:
+                atm.change_user_pin(user, new_pin)
+            else:
+                print("Try next time. Too much fails")
         elif int(menu_choise) == 5:
             return
         else:
@@ -98,6 +103,7 @@ def main():
             else:
                 break
         else:
+            print("Too long or too short. Length must be equals to 4")
             continue
     
     if login_success and user:
