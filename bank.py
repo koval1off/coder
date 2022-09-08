@@ -1,6 +1,6 @@
 from user import User
 from typing import Optional
-
+import json
 
 class ATM:
     def __init__(self):
@@ -8,12 +8,13 @@ class ATM:
         self._read_users()
 
     def _read_users(self):
-        """reads file and writes users"""
-        with open("database.txt", "r") as f:
-            lines = f.readlines()
-            for line in lines:
-                info = line.split(":")
-                user = User(info[0], info[1], int(info[2]))
+        """reads file.json and writes users"""
+        with open("database.json") as file:
+            data_users = json.load(file)
+            for data in data_users["users"]:
+                user = User(data["login"],
+                            data["pass"],
+                            data["balance"])
                 self.users.append(user)
 
     def print_users(self) -> None:
@@ -77,12 +78,6 @@ class ATM:
         print(f"You choosed the Show balance operation!\n"
               f"Your current balance is {user.balance}")
 
-    def save_users(self):
-        """loads all information about users"""
-        with open("database.txt", "w") as f:
-            for user in self.users:
-                f.write(f"{user.user_id}:{user.pin}:{user.balance}\n")
-
     def change_user_pin(self, user: User, new_pin: str) -> None:
         """changes the user's pin"""
         if not new_pin:
@@ -90,3 +85,9 @@ class ATM:
 
         user.pin = new_pin
         self.save_users()
+
+    def save_users(self):
+        """loads all information about users"""
+        with open("database.txt", "w") as f:
+            for user in self.users:
+                f.write(f"{user.user_id}:{user.pin}:{user.balance}\n")
