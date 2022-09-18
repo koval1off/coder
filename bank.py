@@ -5,6 +5,7 @@ import json
 class ATM:
     def __init__(self):
         self.users = []
+        self.users_JSON = []
         self._read_users()
 
     def _read_users(self):
@@ -86,8 +87,11 @@ class ATM:
         user.pin = new_pin
         self.save_users()
 
-    def save_users(self):
-        """loads all information about users"""
-        with open("database.txt", "w") as f:
-            for user in self.users:
-                f.write(f"{user.user_id}:{user.pin}:{user.balance}\n")
+    def save_users(self) -> None:
+        """loads all information about users in JSON"""
+        for user in self.users:
+            user_json = {"login": user.user_id, "pass": user.pin, "balance": user.balance}
+            self.users_JSON.append(user_json)
+
+        with open("database.json", "w") as file:
+            json.dump({"users": self.users_JSON}, file, indent=4)
