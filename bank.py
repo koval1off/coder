@@ -4,19 +4,19 @@ import json
 
 class ATM:
     def __init__(self):
-        self.users = []
-        self.users_JSON = []
-        self._read_users()
+        self.users = self._read_users()
 
-    def _read_users(self):
+    def _read_users(self) -> list:
         """reads file.json and writes users"""
+        users = []
         with open("database.json") as file:
             data_users = json.load(file)
-            for data in data_users["users"]:
-                user = User(data["login"],
-                            data["pass"],
+            for data in data_users:
+                user = User(data["user_id"],
+                            data["pin"],
                             data["balance"])
-                self.users.append(user)
+                users.append(user)
+        return users
 
     def print_users(self) -> None:
         """prints users' info"""
@@ -76,7 +76,7 @@ class ATM:
 
     def show_balance(self, user: User) -> None:
         """shows the user's current balance"""
-        print(f"You choosed the Show balance operation!\n"
+        print(f"You choose the Show balance operation!\n"
               f"Your current balance is {user.balance}")
 
     def change_user_pin(self, user: User, new_pin: str) -> None:
@@ -89,9 +89,7 @@ class ATM:
 
     def save_users(self) -> None:
         """loads all information about users in JSON"""
-        for user in self.users:
-            user_json = {"login": user.user_id, "pass": user.pin, "balance": user.balance}
-            self.users_JSON.append(user_json)
+        json_string = json.dumps([user.__dict__ for user in self.users])
 
         with open("database.json", "w") as file:
-            json.dump({"users": self.users_JSON}, file, indent=4)
+            file.write(json_string)
