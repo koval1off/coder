@@ -2,6 +2,7 @@ from user import User
 from typing import Optional
 import json
 
+
 class ATM:
     def __init__(self):
         self.users = self._read_users()
@@ -84,7 +85,7 @@ class ATM:
         if not new_pin:
             return
 
-        user.pin = new_pin
+        user.pin = user.encrypt_pin(new_pin)
         self.save_users()
 
     def save_users(self) -> None:
