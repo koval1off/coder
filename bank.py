@@ -1,6 +1,7 @@
+from dataclasses import dataclass
 from user import User
 from typing import Optional
-import json
+import mysql.connector
 
 
 class ATM:
@@ -8,15 +9,24 @@ class ATM:
         self.users = self._read_users()
 
     def _read_users(self) -> list:
-        """reads file.json and writes users"""
+        """reads database and writes users"""
         users = []
-        with open("database.json") as file:
-            data_users = json.load(file)
-            for data in data_users:
-                user = User(data["user_id"],
-                            data["pin"],
-                            data["balance"])
-                users.append(user)
+        mydb = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="Kovalsql#12345",
+            database="testdatabase"
+        )
+
+        mycursor = mydb.cursor()
+        mycursor.execute("SELECT * FROM users")
+        data_users = mycursor.fetchall()
+        
+        for data in data_users:
+            user = User(data[0],
+                        data[1],
+                        data[2])
+            users.append(user)
         return users
 
     def print_users(self) -> None:
@@ -52,7 +62,7 @@ class ATM:
             return
 
         user.balance = new_balance
-        self.save_users()
+        self.save_users(user)
 
     def upload_money(self, user: User, amount: int) -> None:
         """adds the amount to the balance of current user"""
@@ -86,11 +96,17 @@ class ATM:
             return
 
         user.pin = user.encrypt_pin(new_pin)
-        self.save_users()
+        self.save_users(user)
 
-    def save_users(self) -> None:
-        """loads all information about users in JSON"""
-        json_string = json.dumps([user.__dict__ for user in self.users])
+    def save_users(self, user: User) -> None:
+        """loads all information about users in database"""
+        mydb = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="Kovalsql#12345",
+            database="testdatabase"
+        )
 
-        with open("database.json", "w") as file:
-            file.write(json_string)
+        mycursor = mydb.cursor()
+        mycursor.execute("UPDATE users SET pin = %s, balance = %s WHERE user_id = %s", (user.pin, user.balance, user.user_id))
+        mydb.commit()
