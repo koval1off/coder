@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from user import User
 from typing import Optional
 import mysql.connector
+import os
 
 
 class ATM:
@@ -62,7 +63,7 @@ class ATM:
             return
 
         user.balance = new_balance
-        self.save_users(user)
+        self.update_user(user)
 
     def upload_money(self, user: User, amount: int) -> None:
         """adds the amount to the balance of current user"""
@@ -96,14 +97,14 @@ class ATM:
             return
 
         user.pin = user.encrypt_pin(new_pin)
-        self.save_users(user)
+        self.update_user(user)
 
-    def save_users(self, user: User) -> None:
-        """loads all information about users in database"""
+    def update_user(self, user: User) -> None:
+        """updates all information about user in database"""
         mydb = mysql.connector.connect(
             host="localhost",
-            user="root",
-            password="Kovalsql#12345",
+            user=f"{os.getenv('USER_DB')}",
+            password=f"{os.getenv('PASS_DB')}",
             database="testdatabase"
         )
 
