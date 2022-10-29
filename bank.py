@@ -14,8 +14,8 @@ class ATM:
         users = []
         mydb = mysql.connector.connect(
             host="localhost",
-            user="root",
-            password="Kovalsql#12345",
+            user=f"{os.getenv('USER_DB')}",
+            password=f"{os.getenv('PASS_DB')}",
             database="testdatabase"
         )
 
