@@ -12,13 +12,7 @@ class ATM:
     def _read_users(self) -> list:
         """reads database and writes users"""
         users = []
-        mydb = mysql.connector.connect(
-            host="localhost",
-            user=f"{os.getenv('USER_DB')}",
-            password=f"{os.getenv('PASS_DB')}",
-            database="testdatabase"
-        )
-
+        mydb = self.get_connection()
         mycursor = mydb.cursor()
         mycursor.execute("SELECT * FROM users")
         data_users = mycursor.fetchall()
@@ -29,6 +23,16 @@ class ATM:
                         data[2])
             users.append(user)
         return users
+
+    def get_connection(self):
+        """returns connection to database"""
+        connection = mysql.connector.connect(
+            host="localhost",
+            user=f"{os.getenv('USER_DB')}",
+            password=f"{os.getenv('PASS_DB')}",
+            database="testdatabase"
+        )
+        return connection
 
     def print_users(self) -> None:
         """prints users' info"""
@@ -101,13 +105,7 @@ class ATM:
 
     def update_user(self, user: User) -> None:
         """updates all information about user in database"""
-        mydb = mysql.connector.connect(
-            host="localhost",
-            user=f"{os.getenv('USER_DB')}",
-            password=f"{os.getenv('PASS_DB')}",
-            database="testdatabase"
-        )
-
+        mydb = self.get_connection()
         mycursor = mydb.cursor()
         mycursor.execute("UPDATE users SET pin = %s, balance = %s WHERE user_id = %s", (user.pin, user.balance, user.user_id))
         mydb.commit()
