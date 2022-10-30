@@ -13,7 +13,7 @@ def get_number_from_input(text: str) -> int:
 
 
 def validation_credential(user_id: str, user_pin: str) -> bool:
-    if len(str(user_id)) == 4 and len(str(user_pin)) == 4:
+    if len(user_id) == 4 and len(user_pin) == 4:
         return True
     else:
         return False
